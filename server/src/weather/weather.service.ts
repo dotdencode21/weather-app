@@ -1,18 +1,15 @@
-import { HttpService } from "@nestjs/axios";
 import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { History } from "src/db/schemas/history.schema";
-import { WeatherResponse } from "./weather.interface";
 import { CreateHistoryDto } from "./dto/create-history.dto";
+import { OpenWeatherService } from "src/api/open-weather/open-weather.service";
 
 @Injectable()
 export class WeatherService {
   constructor(
     @InjectModel(History.name) private historyModel: Model<History>,
-    private httpService: HttpService,
-    private configService: ConfigService
+    private openWeatherService: OpenWeatherService
   ) {}
 
   async findAll(): Promise<History[]> {
@@ -29,7 +26,7 @@ export class WeatherService {
     }    
 
     try {
-      const response = await this.makeAPICall(city);
+      const response = await this.openWeatherService.findWeatherByCity(city);
 
       if (response && Object.keys(response).length) {
         const { current, location } = response;
@@ -44,22 +41,6 @@ export class WeatherService {
 
         return await this.historyModel.create(history);
       }
-    } catch (e: unknown) {
-      throw new InternalServerErrorException()
-    }
-  }
-
-  private async makeAPICall(city: string): Promise<WeatherResponse> {    
-    if (!city) {        
-      throw new BadRequestException();
-    }
-
-    try {
-      const { data } = await this.httpService.axiosRef.get<WeatherResponse>(
-        `${this.configService.get("WEATHER_API_URL")}/current.json?key=${this.configService.get("WEATHER_API_KEY")}&q=${city}&aqi=no`
-      );
-
-      return data;
     } catch (e: unknown) {
       throw new InternalServerErrorException()
     }
