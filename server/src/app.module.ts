@@ -4,6 +4,10 @@ import { WeatherModule } from './weather/weather.module';
 import { DbModule } from './db/db.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), WeatherModule, DbModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), 
+    WeatherModule, 
+    DbModule, 
+  ],
 })
 export class AppModule {}
