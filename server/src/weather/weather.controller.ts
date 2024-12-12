@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { WeatherService } from "./weather.service";
 import { CreateHistoryDto } from "./dto/create-history.dto";
 
@@ -11,6 +11,11 @@ export class WeatherController {
   @Get()
   findAll() {
     return this.weatherService.findAll();
+  }
+
+  @Get(":city")
+  findByCity(@Param("city") city: string) {
+    return this.weatherService.findByCity(city);
   }
 
   @Post('create')

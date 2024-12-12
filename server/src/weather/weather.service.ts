@@ -20,6 +20,14 @@ export class WeatherService {
     }
   }
 
+  async findByCity(city: string): Promise<History> {
+    try {
+      return await this.historyModel.findOne({ city });
+    } catch (e: unknown) {
+      throw new InternalServerErrorException()
+    }
+  }
+
   async create({ city }: CreateHistoryDto) {
     if (!city) {        
       throw new BadRequestException();
