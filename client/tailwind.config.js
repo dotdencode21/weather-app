@@ -5,6 +5,9 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
+		screens: {
+			"sm": { max: "360px" }
+		},
   	extend: {
   		borderRadius: {
   			lg: 'var(--radius)',
