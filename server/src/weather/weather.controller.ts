@@ -18,7 +18,7 @@ export class WeatherController {
     return this.weatherService.findByCity(city);
   }
 
-  @Post('create')
+  @Post()
   create(@Body() createHistoryDto: CreateHistoryDto) {
     return this.weatherService.create(createHistoryDto);
   }
